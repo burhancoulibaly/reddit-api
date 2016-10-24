@@ -1,0 +1,19 @@
+{
+  "name": "reddit-api",
+  "version": "1.0.0",
+  "description": "Using reddit api",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Menekou B. Coulibaly",
+  "license": "ISC",
+  "dependencies": {
+    "angular": "^1.5.8",
+    "angular-animate": "^1.5.8",
+    "angular-route": "^1.5.8",
+    "angular-ui-bootstrap": "^2.1.4",
+    "bootstrap": "^3.3.7",
+    "express": "^4.14.0"
+  }
+}
