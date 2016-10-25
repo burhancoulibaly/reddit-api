@@ -1,6 +1,24 @@
 var  PageApp = angular.module('AppPage',['ngRoute']);
 	PageApp.controller('AppCtrl',['$scope','$http',($scope,$http)=>{
 
+		function getIdentity(token){
+			console.log(token)
+			var req = {
+				method: 'GET',
+				url: 'http://localhost:3002/getIdentity',
+				data:$scope.token,
+				headers:{
+					'Content-Type':'application/json',
+				},
+			};
+
+			$http(req).then(function successCallback(response){
+
+			},function errorCallback(response){
+
+			});
+		}
+
 		var QueryString = function () {
 		  // This function is anonymous, is executed immediately and 
 		  // the return value is assigned to QueryString!
@@ -33,8 +51,12 @@ var  PageApp = angular.module('AppPage',['ngRoute']);
 				}
 				};
 		$http(req).then(function successCallback(response){
-				console.log(response);
+				var token;
+				$scope.token = response.data;
+				console.log($scope.token);
+				getIdentity($scope.token);
 				}, function errorCallback(response){
 				console.log(response);
-				});					
+				});	
+				
 	}]);

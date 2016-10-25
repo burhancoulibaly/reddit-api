@@ -53,6 +53,19 @@ app.post('/gettoken',(req, res)=>{
   });
 });
 
+app.get('/getIdentity',(req,res)=>{
+  console.log(req.body);
+  token = req.body;
+  access_token = token.access_token;
+  console.log(access_token)
+  var token_auth = {
+      'access_token':access_token,
+      'token_type':'bearer',
+      'username':'foolcoolmc',
+  }
+  
+})
+
 var port = process.env.PORT || 3002;
 
 http.createServer(app).listen(port, function (err) {
