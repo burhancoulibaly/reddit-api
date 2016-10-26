@@ -33,7 +33,7 @@ if (process.env.NODE_ENV === 'development') {
   app.use(errorhandler());
 };
 
-app.post('/gettoken',(req, res)=>{
+app.post('/getToken',(req, res)=>{
   query_string = req.body;
   code = query_string.code;
    var params = 'grant_type=authorization_code&code='+code+'&redirect_uri='+redirect_uri;
@@ -52,6 +52,24 @@ app.post('/gettoken',(req, res)=>{
     }
   });
 });
+
+app.post('/getMessages',(req,res) =>{
+  token = req.body;
+  access_token = token.access_token;
+  request.get({
+    url:"https://oauth.reddit.com/message/inbox",
+    headers:{
+       "Authorization": "bearer "+access_token,
+      "User-Agent":"webapp:com.example.redditapitest:v0.0.1 (by /u/foolcoolmc)",
+    },
+  },(err,response,body)=>{
+    if(err){
+    res.send(err);
+  } else{
+    res.send(body);
+  };
+  })
+})
 
 app.post('/getIdentity',(req,res)=>{
   token = req.body;

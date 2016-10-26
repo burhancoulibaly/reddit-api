@@ -1,33 +1,68 @@
 var  PageApp = angular.module('AppPage',['ngRoute']);
 	PageApp.controller('AppCtrl',['$scope','$http',($scope,$http)=>{
 
-		function getIdentity(token){
+		getTokenCallback = function(data){
+			var token = data;
+			getIdentity(token);
+			getMessages(token);
+		}
+		getIdentityCallback = function(data){
+			identity = data;
+			comment_karma = identity.comment_karma;
+			name = identity.name;
+			isEmailVerified = identity.has_verified_email;
+			over_18 = identity.over_18;
+
+			if(isEmailVerified == true && over_18 == true){
+				$scope.message = "This is "+name+" he has "+comment_karma+" karma, his email is verified, and he is over 18";
+			};
+			if(isEmailVerified == false && over_18 == false){
+				$scope.message = "This is "+name+" he has "+comment_karma+" karma, his email is not verified, and he is not over 18";
+			};
+			return identity;
+
+		};
+		getMessagesCallback = function(data){
+			var messages = data;
+			return messages;
+		}
+		
+		getIdentity = function(token){
+			console.log(token);
 			var req = {
 				method: 'POST',
 				url: 'http://localhost:3002/getIdentity',
-				data: $scope.token,
+				data: token,
 				headers:{
 					'Content-Type':'application/json',
 				},
 			};
 
 			$http(req).then(function successCallback(response){
-				identity = response.data;
-				comment_karma = identity.comment_karma;
-				name = identity.name;
-				isEmailVerified = identity.has_verified_email;
-				over_18 = identity.over_18;
-
-				if(isEmailVerified == true && over_18 == true){
-					$scope.message = "This is "+name+" he has "+comment_karma+" karma, his email is verified, and he is over 18";
-				}
-				if(isEmailVerified == false && over_18 == false){
-					$scope.message = "This is "+name+" he has "+comment_karma+" karma, his email is not verified, and he is not over 18";
-				}
-
+				identity = getIdentityCallback(response.data);
+				console.log(identity);
 			},function errorCallback(response){
 				console.log(response);
 			});
+
+		};
+
+		getMessages = function(token){
+			var req = {
+				method: 'POST',
+				url:'http://localhost:3002/getMessages',
+				data:token,
+				headers:{
+					'Content-Type':'application/json',
+				},
+			};
+
+			$http(req).then(function successCallback(response){
+				messages = getMessagesCallback(response.data);
+				console.log(messages);
+			},function errorCallback(reponse){
+				console.log(response);
+			});			
 		};
 
 		var QueryString = function () {
@@ -52,21 +87,23 @@ var  PageApp = angular.module('AppPage',['ngRoute']);
 		  } 
 		  return query_string;
 		}();
-
-		var req = {
+		getToken = function(){
+			var req = {
 				method:'POST',
-				url:'http://localhost:3002/gettoken',
+				url:'http://localhost:3002/getToken',
 				data: QueryString,
 				headers:{
 					'Content-Type':'application/json',
 				}
 				};
 		$http(req).then(function successCallback(response){
-				var token;
-				$scope.token = response.data;
-				getIdentity($scope.token);
+				getTokenCallback(response.data);
 				}, function errorCallback(response){
 					console.log(response);
-				});	
+				});
+		}
+
+		getToken();
+		
 				
 	}]);
