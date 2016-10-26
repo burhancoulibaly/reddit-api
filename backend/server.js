@@ -53,18 +53,23 @@ app.post('/gettoken',(req, res)=>{
   });
 });
 
-app.get('/getIdentity',(req,res)=>{
-  console.log(req.body);
+app.post('/getIdentity',(req,res)=>{
   token = req.body;
   access_token = token.access_token;
-  console.log(access_token)
-  var token_auth = {
-      'access_token':access_token,
-      'token_type':'bearer',
-      'username':'foolcoolmc',
-  }
-  
-})
+  request.get({
+    url: "https://oauth.reddit.com/api/v1/me",
+    headers:{
+      "Authorization": "bearer "+access_token,
+      "User-Agent":"webapp:com.example.redditapitest:v0.0.1 (by /u/foolcoolmc)",
+    },
+  },(err,response,body)=>{
+    if(err){
+    res.send(err);
+  } else{
+    res.send(body);
+  };
+  });
+});
 
 var port = process.env.PORT || 3002;
 

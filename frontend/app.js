@@ -2,22 +2,33 @@ var  PageApp = angular.module('AppPage',['ngRoute']);
 	PageApp.controller('AppCtrl',['$scope','$http',($scope,$http)=>{
 
 		function getIdentity(token){
-			console.log(token)
 			var req = {
-				method: 'GET',
+				method: 'POST',
 				url: 'http://localhost:3002/getIdentity',
-				data:$scope.token,
+				data: $scope.token,
 				headers:{
 					'Content-Type':'application/json',
 				},
 			};
 
 			$http(req).then(function successCallback(response){
+				identity = response.data;
+				comment_karma = identity.comment_karma;
+				name = identity.name;
+				isEmailVerified = identity.has_verified_email;
+				over_18 = identity.over_18;
+
+				if(isEmailVerified == true && over_18 == true){
+					$scope.message = "This is "+name+" he has "+comment_karma+" karma, his email is verified, and he is over 18";
+				}
+				if(isEmailVerified == false && over_18 == false){
+					$scope.message = "This is "+name+" he has "+comment_karma+" karma, his email is not verified, and he is not over 18";
+				}
 
 			},function errorCallback(response){
-
+				console.log(response);
 			});
-		}
+		};
 
 		var QueryString = function () {
 		  // This function is anonymous, is executed immediately and 
@@ -53,10 +64,9 @@ var  PageApp = angular.module('AppPage',['ngRoute']);
 		$http(req).then(function successCallback(response){
 				var token;
 				$scope.token = response.data;
-				console.log($scope.token);
 				getIdentity($scope.token);
 				}, function errorCallback(response){
-				console.log(response);
+					console.log(response);
 				});	
 				
 	}]);
