@@ -14,7 +14,32 @@
     <div>
       <div ng-app="AppPage">
         <div ng-controller="AppCtrl">
-            <h3>{{message}}</h3>
+          <div id="leftSidenav" class="sidenav">
+            <a href="javascript:void(0)" class="closebtn" ng-click="closeLeftNav()">&times;</a>
+            <img class="profile-pic" src="https://f4.bcbits.com/img/a4062848838_10.jpg">
+            <h4 class="messages-style">{{message}}</h4>
+          </div>
+          <div id="mesSidenav" class="sidenav">
+            <a href="javascript:void(0)" class="closebtn" ng-click="closeMesNav()">&times;</a>
+            <img class="profile-pic" src="https://f4.bcbits.com/img/a4062848838_10.jpg">
+            <ul>
+              <li ng-repeat = "message in messages" class="list-style">
+                <h4 class="messages-style">{{message}}</h4>
+              </li>
+            </ul>
+            
+          </div>
+
+
+
+
+            <div id="main">
+              <div class="pic-location">
+                <img class="profile-pic" ng-click="openLeftNav()" src="https://f4.bcbits.com/img/a4062848838_10.jpg">
+
+                <button class="message-btn" ng-click="openMesNav()">Messages</button>
+              </div>
+            </div>
         </div>
       </div>
   </body>

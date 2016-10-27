@@ -14,16 +14,31 @@ var  PageApp = angular.module('AppPage',['ngRoute']);
 			over_18 = identity.over_18;
 
 			if(isEmailVerified == true && over_18 == true){
-				$scope.message = "This is "+name+" he has "+comment_karma+" karma, his email is verified, and he is over 18";
+				$scope.message = "Username: "+name+"\n\nKarma: "+comment_karma+"\n \nEmail Status: Email is verified\n\nAge Status: Over 18";
 			};
 			if(isEmailVerified == false && over_18 == false){
-				$scope.message = "This is "+name+" he has "+comment_karma+" karma, his email is not verified, and he is not over 18";
+				$scope.message = "Username: "+name+"\n\nKarma: "+comment_karma+"\n\nEmail Status: Email is not verified\n\nAge Status: Not over 18";
+			};
+			if(isEmailVerified == true && over_18 == false){
+				$scope.message = "Username: "+name+"\n\nKarma: "+comment_karma+"\n\nEmail Status: Email is verified\n\nAge Status: Not over 18";
+			};
+			if(isEmailVerified == false && over_18 == true){
+				$scope.message = "Username: "+name+"\n\nKarma: "+comment_karma+"\n\nEmail Status: Email is not verified\n\nAge Status: Over 18";
 			};
 			return identity;
 
 		};
 		getMessagesCallback = function(data){
-			var messages = data;
+			var author=[];
+			var messageBodies=[];
+			var messageArray=[];
+			var messages = data.data.children;
+			for(var i = 0; i < messages.length; i++){
+				author.push(messages[i].data.author);
+				messageBodies.push(messages[i].data.body);
+				messageArray.push("From: "+author[i]+"\nMessage: "+messageBodies[i]);
+			}
+			$scope.messages = messageArray;
 			return messages;
 		}
 		
@@ -59,7 +74,6 @@ var  PageApp = angular.module('AppPage',['ngRoute']);
 
 			$http(req).then(function successCallback(response){
 				messages = getMessagesCallback(response.data);
-				console.log(messages);
 			},function errorCallback(reponse){
 				console.log(response);
 			});			
@@ -104,6 +118,27 @@ var  PageApp = angular.module('AppPage',['ngRoute']);
 		}
 
 		getToken();
+
+		$scope.openLeftNav = function(){
+			document.getElementById("leftSidenav").style.width = "250px";
+    		document.getElementById("main").style.marginLeft = "250px";
+    		document.body.style.backgroundColor = "rgba(0,0,0,0.4)";
+		}
+		$scope.closeLeftNav = function(){
+			document.getElementById("leftSidenav").style.width = "0";
+    		document.getElementById("main").style.marginLeft = "0";
+    		document.body.style.backgroundColor = "white";
+		}
+		$scope.openMesNav = function(){
+			document.getElementById("mesSidenav").style.width = "300px";
+    		document.getElementById("main").style.marginLeft = "300px";
+    		document.body.style.backgroundColor = "rgba(0,0,0,0.4)";
+		}
+		$scope.closeMesNav = function(){
+			document.getElementById("mesSidenav").style.width = "0";
+    		document.getElementById("main").style.marginLeft = "0";
+    		document.body.style.backgroundColor = "white";
+		}
 		
 				
 	}]);
