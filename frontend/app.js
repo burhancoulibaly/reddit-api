@@ -1,10 +1,15 @@
 var  PageApp = angular.module('AppPage',['ngRoute']);
-	PageApp.controller('AppCtrl',['$scope','$http',($scope,$http)=>{
+	PageApp.controller('AppCtrl',['$scope','$http',($scope,$http,$interval)=>{
+		var count = 0;
 
 		getTokenCallback = function(data){
 			var token = data;
 			getIdentity(token);
 			getMessages(token);
+			$scope.refreshMessages = function(){
+				getMessages(token);
+			}
+			setInterval(function(){getMessages(token);},30000);
 		}
 		getIdentityCallback = function(data){
 			identity = data;
@@ -29,16 +34,44 @@ var  PageApp = angular.module('AppPage',['ngRoute']);
 
 		};
 		getMessagesCallback = function(data){
-			var author=[];
-			var messageBodies=[];
-			var messageArray=[];
 			var messages = data.data.children;
+			var newMessages=[];
+			var newMessagesArray = [];
+			var itwo = 0;
+			if(count > 0 && messages[0].data.body !== messageBodies[0]){
+				i = 0;
+			do{
+			  	
+				// Get the snackbar DIV
+    			var x = document.getElementById("snackbar")
+
+   				// Add the "show" class to DIV
+    			x.className = "show";
+
+    			// After 3 seconds, remove the show class from DIV
+    			setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+
+    			newMessagesArray.push("New Message\nFrom: "+messages[i].data.author+"\nMessage: "+messages[i].data.body);
+
+    			$scope.newMessages = newMessagesArray;
+    			
+    			i++;
+
+    			if(messages[i].data.body == messageBodies[0]){
+    				itwo = 2;
+    			};
+    		 } while(itwo < 1);
+			};
+			var author=[];
+			var messageArray=[];
+			messageBodies=[];
 			for(var i = 0; i < messages.length; i++){
 				author.push(messages[i].data.author);
 				messageBodies.push(messages[i].data.body);
 				messageArray.push("From: "+author[i]+"\nMessage: "+messageBodies[i]);
 			}
 			$scope.messages = messageArray;
+			count++;
 			return messages;
 		}
 		

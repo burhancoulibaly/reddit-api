@@ -23,9 +23,12 @@
             <a href="javascript:void(0)" class="closebtn" ng-click="closeMesNav()">&times;</a>
             <img class="profile-pic" src="https://f4.bcbits.com/img/a4062848838_10.jpg">
             <ul>
-              <li ng-repeat = "message in messages" class="list-style">
+              <li ng-repeat = "message in messages track by $index" class="list-style">
                 <h4 class="messages-style">{{message}}</h4>
               </li>
+              <button class="message-btn" ng-click="refreshMessages()">
+              Refresh  Messages
+              </button>
             </ul>
             
           </div>
@@ -38,6 +41,13 @@
                 <img class="profile-pic" ng-click="openLeftNav()" src="https://f4.bcbits.com/img/a4062848838_10.jpg">
 
                 <button class="message-btn" ng-click="openMesNav()">Messages</button>
+
+                <div id="snackbar">
+                  <ul>
+                    <li ng-repeat = "newMessage in newMessages track by $index" class="list-style">
+                      <h4>{{newMessage}}</h4>
+                    </li>
+                  </ul>
               </div>
             </div>
         </div>
